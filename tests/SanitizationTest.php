@@ -25,21 +25,247 @@ use PHPUnit\Framework\TestCase;
 
 class SanitizationTest extends TestCase
 {
-     public $rules;
-     
-     public function setUp()
+    public function testIntegers()
     {
-        $this->rules = [];
+        $rules = [
+            'a' => [
+                'type' => 'integer'
+            ],
+            'b' => [
+                'type' => 'integer'
+            ],
+            'c' => [
+                'type' => 'integer'
+            ],
+            'd' => [
+                'type' => 'integer'
+            ]
+        ];
+        $array = [
+            'a' => 10,
+            'b' => '11',
+            'c' => 12.1,
+            'd' => '13.9'
+        ];
+        $result = Sanitization::sanitize($array, $rules);
+        $expected = [
+            'a' => 10,
+            'b' => 11,
+            'c' => 12,
+            'd' => 13
+        ];
+        $this->assertEquals($expected, $result);
     }
     
-    public function tearDown()
+	public function testDecimal()
+	{
+		$rules = [
+			'a' => [
+				'type' => 'decimal'
+			],
+			'b' => [
+				'type' => 'decimal'
+			],
+			'c' => [
+				'type' => 'decimal'
+			],
+			'd' => [
+				'type' => 'decimal'
+			]
+		];
+		$array = [
+            'a' => 10,
+            'b' => '11.5',
+            'c' => 12.1,
+            'd' => '13.9'
+        ];
+        $result = Sanitization::sanitize($array, $rules);
+        $expected = [
+            'a' => 10,
+            'b' => 11.5,
+            'c' => 12.1,
+            'd' => 13.9
+        ];
+        $this->assertEquals($expected, $result);
+	}
+	
+	public function testString()
+	{
+		$rules = [
+			'a' => [
+				'type' => 'string'
+			],
+			'b' => [
+				'type' => 'string'
+			],
+			'c' => [
+				'type' => 'string'
+			],
+			'd' => [
+				'type' => 'string'
+			]
+		];
+		$array = [
+			'a' => '<a href="www.website.com>Hello</a>',
+			'b' => "This isn't really a good test.",
+			'c' => "The string filter doesn't really do that <i>much</i>.",
+			'd' => 'Okay. Maybe it does a little?'
+		];
+		$result = Sanitization::sanitize($array, $rules);
+        $expected = [
+            'a' => "Hello",
+            'b' => "This isn't really a good test.",
+            'c' => "The string filter doesn't really do that much.",
+            'd' => "Okay. Maybe it does a little?"
+        ];
+        $this->assertEquals($expected, $result);
+	}
+	
+	public function testMultidimensionalArray()
+	{
+		$rules = [
+			'a' => [
+				'type' => 'integer'
+			],
+			'b' => [
+				'type' => 'Custom',
+				'fields' => [
+					'a' => [
+						'type' => 'decimal'
+					]
+				]
+			]
+		];	
+		$array = [
+			'a' => 10.1,
+			'b' => [
+				'a' => 10.1
+			]
+		];
+		$result = Sanitization::sanitize($array, $rules);
+        $expected = [
+            'a' => 10,
+            'b' => [
+				'a' => 10.1
+			]
+        ];
+        $this->assertEquals($expected, $result);
+	}
+	
+	public function testBoolean()
+	{
+		$rules = [
+			'a' => [
+				'type' => 'boolean'
+			],
+			'b' => [
+				'type' => 'boolean'
+			],
+			'c' => [
+				'type' => 'boolean'
+			],
+			'd' => [
+				'type' => 'boolean'
+			],
+			'e' => [
+				'type' => 'boolean'
+			]
+		];		
+		$array = [
+			'a' => true,
+			'b' => 'true',
+			'c' => false,
+			'd' => 'false',
+			'e' => null
+		];
+		$result = Sanitization::sanitize($array, $rules);
+        $expected = [
+            'a' => true,
+            'b' => true,
+            'c' => false,
+            'd' => false,
+			'e' => false
+        ];
+        $this->assertEquals($expected, $result);
+	}
+	
+    public function testPattern()
     {
-        unset($this->rules);
+        $rules = [
+            'a' => [
+                'pattern' => '\d{5}'
+            ],
+            'b' => [
+                'pattern' => 'ISO 8601'
+            ],
+            'c' => [
+                'type' => 'string',
+                'pattern' => 'one|two|three'
+            ]   
+        ];
+        $array = [
+            'a' => 'abc12345def',
+            'b' => '2005-08-15T15:52:01+00:00',
+            'c' => 'sixtythree'
+        ];
+        $result = Sanitization::sanitize($array, $rules);
+        $expected = [
+            'a' => '12345'
+            'b' => '2005-08-15T15:52:01+00:00',
+            'c' => 'three'
+        ];
+        $this->assertEquals($expected, $result);
     }
- 
-    public function testSanitization()
+    
+    public function testISO8601()
     {
-        $this->markTestIncomplete();
+        $rules = [
+            'a' => [
+                'pattern' => 'ISO 8601'
+            ],
+            'b' => [
+                'pattern' => 'ISO 8601'
+            ],
+            'c' => [
+                'pattern' => 'ISO 8601'
+            ],
+            'd' => [
+                'pattern' => 'ISO 8601'
+            ],
+            'e' => [
+                'pattern' => 'ISO 8601'
+            ],
+            'f' => [
+                'pattern' => 'ISO 8601'
+            ],
+            'g' => [
+                'pattern' => 'ISO 8601'
+            ],
+            'h' => [
+                'pattern' => 'ISO 8601'
+            ]
+        ];
+        $array = [
+            'a' => '2017-02-18'
+            'b' => '2017-02-18T20:44:48+00:00'
+            'c' => '2017-02-18T20:44:48Z'
+            'd' => '20170218T204448Z'
+            'e' => '2017-W07'
+            'f' => '2017-W07-6'
+            'g' => '--02-18'
+            'h' => '2017-049'
+        ];
+        $result = Sanitization::sanitize($array, $rules);
+        $expected = [
+            'a' => '2017-02-18'
+            'b' => '2017-02-18T20:44:48+00:00'
+            'c' => '2017-02-18T20:44:48Z'
+            'd' => '20170218T204448Z'
+            'e' => '2017-W07'
+            'f' => '2017-W07-6'
+            'g' => '--02-18'
+            'h' => '2017-049'
+        ];
+        $this->assertEquals($expected, $result);
     }
-
 }

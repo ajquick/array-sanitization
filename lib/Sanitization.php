@@ -24,15 +24,15 @@ namespace Multidimensional\Usps;
 class Sanitization
 {
 
-/**
- * @param array $array
- * @param array $rules
- * @return array
- */
+    /**
+     * @param array $array
+     * @param array $rules
+     * @return array
+     */
     public static function sanitize($array, $rules)
     {
         $newArray = [];
-        if (count($array)) {
+        if (is_array($array)) {
             foreach ($array as $key => $value) {
                 if (in_array($key, array_keys($rules))) {
                     $newArray[$key] = self::sanitizeField($key, $value, $rules[$key]);
@@ -43,11 +43,11 @@ class Sanitization
         return $newArray;
     }
 
-/**
- * @param string $key
- * @param string $value
- * @param array  $rules
- */
+    /**
+     * @param string $key
+     * @param string $value
+     * @param array  $rules
+     */
     public static function sanitizeField($key, $value, $rules)
     {
         if (is_array($value)) {
@@ -74,42 +74,41 @@ class Sanitization
             }
         }
 
-
         return $value;
     }
 
-/**
- * @param string|int $value
- * @return int
- */
-    private static function sanitizeInteger($value)
+    /**
+     * @param string|int $value
+     * @return int
+     */
+    protected static function sanitizeInteger($value)
     {
-        return filter_var($value, FILTER_SANITIZE_NUMBER_INT);
+        return filter_var(intval($value), FILTER_SANITIZE_NUMBER_INT);
     }
 
-/**
- * @param string $value
- * @return string
- */
-    private static function sanitizeString($value)
+    /**
+     * @param string $value
+     * @return string
+     */
+    protected static function sanitizeString($value)
     {
         return filter_var($value, FILTER_SANITIZE_STRING);
     }
 
-/**
- * @param string|float $value
- * @return float
- */
-    private static function sanitizeDecimal($value)
+    /**
+     * @param string|float $value
+     * @return float
+     */
+    protected static function sanitizeDecimal($value)
     {
-        return filter_var($value, FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
+        return filter_var(floatval($value), FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
     }
 
-/**
- * @param string|bool $value
- * @return true|false|null
- */
-    private static function sanitizeBoolean($value)
+    /**
+     * @param string|bool $value
+     * @return true|false|null
+     */
+    protected static function sanitizeBoolean($value)
     {
         return filter_var($value, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE);
     }
