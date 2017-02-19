@@ -57,23 +57,23 @@ class SanitizationTest extends TestCase
         $this->assertEquals($expected, $result);
     }
     
-	public function testDecimal()
-	{
-		$rules = [
-			'a' => [
-				'type' => 'decimal'
-			],
-			'b' => [
-				'type' => 'decimal'
-			],
-			'c' => [
-				'type' => 'decimal'
-			],
-			'd' => [
-				'type' => 'decimal'
-			]
-		];
-		$array = [
+    public function testDecimal()
+    {
+        $rules = [
+            'a' => [
+                'type' => 'decimal'
+            ],
+            'b' => [
+                'type' => 'decimal'
+            ],
+            'c' => [
+                'type' => 'decimal'
+            ],
+            'd' => [
+                'type' => 'decimal'
+            ]
+        ];
+        $array = [
             'a' => 10,
             'b' => '11.5',
             'c' => 12.1,
@@ -87,31 +87,31 @@ class SanitizationTest extends TestCase
             'd' => 13.9
         ];
         $this->assertEquals($expected, $result);
-	}
-	
-	public function testString()
-	{
-		$rules = [
-			'a' => [
-				'type' => 'string'
-			],
-			'b' => [
-				'type' => 'string'
-			],
-			'c' => [
-				'type' => 'string'
-			],
-			'd' => [
-				'type' => 'string'
-			]
-		];
-		$array = [
-			'a' => '<a href="www.website.com>Hello</a>',
-			'b' => "This isn't really a good test.",
-			'c' => "The string filter doesn't really do that <i>much</i>.",
-			'd' => 'Okay. Maybe it does a little?'
-		];
-		$result = Sanitization::sanitize($array, $rules);
+    }
+    
+    public function testString()
+    {
+        $rules = [
+            'a' => [
+                'type' => 'string'
+            ],
+            'b' => [
+                'type' => 'string'
+            ],
+            'c' => [
+                'type' => 'string'
+            ],
+            'd' => [
+                'type' => 'string'
+            ]
+        ];
+        $array = [
+            'a' => '<a href="www.website.com>Hello</a>',
+            'b' => "This isn't really a good test.",
+            'c' => "The string filter doesn't really do that <i>much</i>.",
+            'd' => 'Okay. Maybe it does a little?'
+        ];
+        $result = Sanitization::sanitize($array, $rules);
         $expected = [
             'a' => "Hello",
             'b' => "This isn't really a good test.",
@@ -119,76 +119,76 @@ class SanitizationTest extends TestCase
             'd' => "Okay. Maybe it does a little?"
         ];
         $this->assertEquals($expected, $result);
-	}
-	
-	public function testMultidimensionalArray()
-	{
-		$rules = [
-			'a' => [
-				'type' => 'integer'
-			],
-			'b' => [
-				'type' => 'Custom',
-				'fields' => [
-					'a' => [
-						'type' => 'decimal'
-					]
-				]
-			]
-		];	
-		$array = [
-			'a' => 10.1,
-			'b' => [
-				'a' => 10.1
-			]
-		];
-		$result = Sanitization::sanitize($array, $rules);
+    }
+    
+    public function testMultidimensionalArray()
+    {
+        $rules = [
+            'a' => [
+                'type' => 'integer'
+            ],
+            'b' => [
+                'type' => 'Custom',
+                'fields' => [
+                    'a' => [
+                        'type' => 'decimal'
+                    ]
+                ]
+            ]
+        ];    
+        $array = [
+            'a' => 10.1,
+            'b' => [
+                'a' => 10.1
+            ]
+        ];
+        $result = Sanitization::sanitize($array, $rules);
         $expected = [
             'a' => 10,
             'b' => [
-				'a' => 10.1
-			]
+                'a' => 10.1
+            ]
         ];
         $this->assertEquals($expected, $result);
-	}
-	
-	public function testBoolean()
-	{
-		$rules = [
-			'a' => [
-				'type' => 'boolean'
-			],
-			'b' => [
-				'type' => 'boolean'
-			],
-			'c' => [
-				'type' => 'boolean'
-			],
-			'd' => [
-				'type' => 'boolean'
-			],
-			'e' => [
-				'type' => 'boolean'
-			]
-		];		
-		$array = [
-			'a' => true,
-			'b' => 'true',
-			'c' => false,
-			'd' => 'false',
-			'e' => null
-		];
-		$result = Sanitization::sanitize($array, $rules);
+    }
+    
+    public function testBoolean()
+    {
+        $rules = [
+            'a' => [
+                'type' => 'boolean'
+            ],
+            'b' => [
+                'type' => 'boolean'
+            ],
+            'c' => [
+                'type' => 'boolean'
+            ],
+            'd' => [
+                'type' => 'boolean'
+            ],
+            'e' => [
+                'type' => 'boolean'
+            ]
+        ];        
+        $array = [
+            'a' => true,
+            'b' => 'true',
+            'c' => false,
+            'd' => 'false',
+            'e' => null
+        ];
+        $result = Sanitization::sanitize($array, $rules);
         $expected = [
             'a' => true,
             'b' => true,
             'c' => false,
             'd' => false,
-			'e' => false
+            'e' => false
         ];
         $this->assertEquals($expected, $result);
-	}
-	
+    }
+    
     public function testPattern()
     {
         $rules = [
