@@ -19,7 +19,7 @@
  * unless prior written permission is obtained.
  */
 
-namespace Multidimensional\Usps;
+namespace Multidimensional\ArraySanitization;
 
 class Sanitization
 {
