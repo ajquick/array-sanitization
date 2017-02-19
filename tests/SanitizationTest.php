@@ -18,12 +18,12 @@
  * unless prior written permission is obtained.
  */
 
-namespace Multidimensional\ArrayValidation\Test;
+namespace Multidimensional\ArraySanitization\Test;
 
-use Multidimensional\ArrayValidation\Validation;
+use Multidimensional\ArraySanitization\Sanitization;
 use PHPUnit\Framework\TestCase;
 
-class ValidationTest extends TestCase
+class SanitizationTest extends TestCase
 {
      public $rules;
      
@@ -37,7 +37,7 @@ class ValidationTest extends TestCase
         unset($this->rules);
     }
  
-    public function testValidation()
+    public function testSanitization()
     {
         $this->markTestIncomplete();
     }

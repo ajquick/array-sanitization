@@ -15,12 +15,12 @@
     },
     "autoload": {
         "psr-4": {
-            "Multidimensional\\ArraySanitzation\\": "lib"
+            "Multidimensional\\ArraySanitization\\": "lib"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Multidimensional\\ArraySanitzation\\Test\\": "tests"
+            "Multidimensional\\ArraySanitization\\Test\\": "tests"
         }
     }
 }
