@@ -1,0 +1,26 @@
+{
+    "name": "multidimensional/array-sanitization",
+    "description": "Sanitize an array using rules from another array.",
+    "authors": [{
+        "name": "multidimension.al",
+        "homepage": "https://multidimension.al",
+        "role": "Developer"
+    }],
+    "require": {
+        "php": ">=5.5"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "*",
+        "squizlabs/php_codesniffer": "*"
+    },
+    "autoload": {
+        "psr-4": {
+            "Multidimensional\\ArraySanitzation\\": "lib"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Multidimensional\\ArraySanitzation\\Test\\": "tests"
+        }
+    }
+}
