@@ -114,8 +114,8 @@ class SanitizationTest extends TestCase
         $result = Sanitization::sanitize($array, $rules);
         $expected = [
             'a' => "Hello",
-            'b' => "This isn't really a good test.",
-            'c' => "The string filter doesn't really do that much.",
+            'b' => "This isn&#39;t really a good test.",
+            'c' => "The string filter doesn&#39;t really do that much.",
             'd' => "Okay. Maybe it does a little?"
         ];
         $this->assertEquals($expected, $result);
@@ -144,7 +144,7 @@ class SanitizationTest extends TestCase
         ];
         $result = Sanitization::sanitize($array, $rules);
         $expected = [
-            'a' => 10,
+            'a' => '10',
             'b' => [
                 'a' => 10.1
             ]
