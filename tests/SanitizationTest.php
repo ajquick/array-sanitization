@@ -237,9 +237,9 @@ class SanitizationTest extends TestCase
         ];
         $result = Sanitization::sanitize($array, $rules);
         $expected = [
-            'b' => '2017-02-18T20:44:48+00:00',
-            'c' => '2017-02-18T20:44:48Z',
-            'd' => '2017-02-18T20:44:48-06:00'
+            'a' => '2017-02-18T20:44:48+00:00',
+            'b' => '2017-02-18T20:44:48Z',
+            'c' => '2017-02-18T20:44:48-06:00'
         ];
         $this->assertEquals($expected, $result);
     }

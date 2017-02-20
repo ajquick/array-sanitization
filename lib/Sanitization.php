@@ -50,9 +50,8 @@ class Sanitization
      */
     public static function sanitizeField($key, $value, $rules)
     {
-        if (is_array($value)) {
-			var_export($value);
-            return self::sanitize($value, $rules);
+        if (is_array($value) && isset($rules['fields'])) {
+            return self::sanitize($value, $rules['fields']);
         }
 
         if (isset($rules['pattern'])) {
@@ -139,7 +138,7 @@ class Sanitization
      */
     protected static function sanitizePattern($value, $pattern)
     {
-        if (preg_match('/^' . $pattern . '/$', $value) !== false) {
+        if (preg_match('/^' . $pattern . '$/', $value) !== false) {
             return $value;
         }
         
