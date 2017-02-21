@@ -205,7 +205,7 @@ class SanitizationTest extends TestCase
         ];
         $array = [
             'a' => 'abc12345def',
-            'b' => '2005-08-15T15:52:01+00:00',
+            'b' => '2005-08-15T15:52:01+00:00ABC',
             'c' => 'sixtythree'
         ];
         $result = Sanitization::sanitize($array, $rules);
