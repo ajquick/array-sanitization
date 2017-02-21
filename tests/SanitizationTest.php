@@ -231,8 +231,8 @@ class SanitizationTest extends TestCase
             ]
         ];
         $array = [
-            'a' => '2017-02-18T20:44:48+00:00',
-            'b' => '2017-02-18T20:44:48Z',
+            'a' => '2017-02-18T20:44:48+00:00ABCDEF',
+            'b' => '2017##$$$-02-18T20:44:48Z',
             'c' => '2017-02-18T20:44:48-06:00',
         ];
         $result = Sanitization::sanitize($array, $rules);

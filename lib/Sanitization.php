@@ -122,9 +122,9 @@ class Sanitization
         $pattern = '(?:[1-9]\d{3}-(?:(?:0[1-9]|1[0-2])-(?:0[1-9]|1\d|2[0-8])|(?:0[13-9]|1[0-2])-(?:29|30)|(?:0[13578]|1[02])-31)|(?:[1-9]\d(?:0[48]|[2468][048]|[13579][26])|(?:[2468][048]|[13579][26])00)-02-29)T(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:Z|[+-][01]\d:[0-5]\d)';
         $value = trim($value);
          
-        if (preg_match('/^' . $pattern . '$/', $value) !== false ||
-            preg_match('/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}[+-]\d{2}:\d{2}$/', $value) !== false || 
-            preg_match('/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z/$', $value) !== false) {
+        if (preg_match('/^' . $pattern . '$/', $value) ||
+            preg_match('/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}[+-]\d{2}:\d{2}$/', $value) || 
+            preg_match('/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z/$', $value)) {
             return $value;        
         }
 
@@ -138,7 +138,7 @@ class Sanitization
      */
     protected static function sanitizePattern($value, $pattern)
     {
-        if (preg_match('/^' . $pattern . '$/', $value) !== false) {
+        if (preg_match('/^' . $pattern . '$/', $value)) {
             return $value;
         }
         
