@@ -124,7 +124,7 @@ class Sanitization
          
         if (preg_match('/^' . $pattern . '$/', $value) ||
             preg_match('/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}[+-]\d{2}:\d{2}$/', $value) || 
-            preg_match('/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z/$', $value)) {
+            preg_match('/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$/', $value)) {
             return $value;        
         }
 
