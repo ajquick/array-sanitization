@@ -61,6 +61,10 @@ class Sanitization
                 $value = self::sanitizePattern($value, $rules['pattern']);
             }
         }
+        
+        if (isset($rules['values'])) {
+            $value = self::sanitizeValues($value, $rules['values']);            
+        }
 
         if (isset($rules['type'])) {
             if ($rules['type'] == 'integer') {
@@ -143,5 +147,25 @@ class Sanitization
         }
         
         return preg_replace('/[^' . $pattern . ']/', '', $value);    
+    }
+    
+    /**
+     * @param string $value
+     * @param array|string $array
+     * @return string
+     */
+    protected static function sanitizeValues($value, $array)
+    {
+        if (is_array($array)) {
+            foreach ($array as $key) {
+                if (strcasecmp($value, $key) === 0) {
+                    return $key;    
+                }
+            }
+        } elseif (strcasecmp($value, $array) === 0) {
+            return $array;
+        }
+        
+        return $value;
     }
 }

@@ -197,22 +197,16 @@ class SanitizationTest extends TestCase
             ],
             'b' => [
                 'pattern' => 'ISO 8601'
-            ],
-            'c' => [
-                'type' => 'string',
-                'pattern' => 'one|two|three'
-            ]   
+            ]
         ];
         $array = [
             'a' => 'abc12345def',
-            'b' => '2005-08-15T15:52:01+00:00ABC',
-            'c' => 'sixtythree'
+            'b' => '2005-08-15T15:52:01+00:00ABC'
         ];
         $result = Sanitization::sanitize($array, $rules);
         $expected = [
             'a' => '12345',
-            'b' => '2005-08-15T15:52:01+00:00',
-            'c' => 'three'
+            'b' => '2005-08-15T15:52:01+00:00'
         ];
         $this->assertEquals($expected, $result);
     }
@@ -240,6 +234,43 @@ class SanitizationTest extends TestCase
             'a' => '2017-02-18T20:44:48+00:00',
             'b' => '2017-02-18T20:44:48Z',
             'c' => '2017-02-18T20:44:48-06:00'
+        ];
+        $this->assertEquals($expected, $result);
+    }
+    
+    public function testValues()
+    {
+        $rules = [
+            'a' => [
+                'type' => 'integer',
+                'values' => [
+                    100,
+                    101,
+                    102
+                ]
+            ],
+            'b' => [
+                'type' => 'string',
+                'values' => [
+                    'hello',
+                    'goodbye'
+                ]
+            ],
+            'c' => [
+                'type' => 'string',
+                'values' => 'goodbye'
+            ]
+        ];
+        $array = [
+            'a' => '101',
+            'b' => 'hello',
+            'c' => 'goodbye'
+        ];
+        $result = Sanitization::sanitize($array, $rules);
+        $expected = [
+            'a' => 101,
+            'b' => 'hello',
+            'c' => 'goodbye'
         ];
         $this->assertEquals($expected, $result);
     }
