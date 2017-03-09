@@ -96,6 +96,7 @@ class Sanitization
      */
     protected static function sanitizeString($value)
     {
+        return (string) filter_var(strval($value), FILTER_SANITIZE_STRING);
     }
 
     /**
