@@ -87,7 +87,7 @@ class Sanitization
      */
     protected static function sanitizeInteger($value)
     {
-        return filter_var(intval($value), FILTER_SANITIZE_NUMBER_INT);
+        return (int) filter_var(intval($value), FILTER_SANITIZE_NUMBER_INT);
     }
 
     /**
@@ -96,7 +96,6 @@ class Sanitization
      */
     protected static function sanitizeString($value)
     {
-        return filter_var($value, FILTER_SANITIZE_STRING);
     }
 
     /**
@@ -105,7 +104,7 @@ class Sanitization
      */
     protected static function sanitizeDecimal($value)
     {
-        return filter_var(floatval($value), FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
+        return (float) filter_var(floatval($value), FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
     }
 
     /**
