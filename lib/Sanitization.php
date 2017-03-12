@@ -35,7 +35,7 @@ class Sanitization
         if (is_array($array)) {
             foreach ($array as $key => $value) {
                 if (in_array($key, array_keys($rules))) {
-                    $newArray[$key] = self::sanitizeField($key, $value, $rules[$key]);
+                    $newArray[$key] = self::sanitizeField($value, $rules[$key]);
                 }
             }
         }
@@ -44,11 +44,12 @@ class Sanitization
     }
 
     /**
-     * @param string $key
      * @param string $value
-     * @param array  $rules
+     * @param array $rules
+     * @return string $value
+     * @internal param string $key
      */
-    public static function sanitizeField($key, $value, $rules)
+    public static function sanitizeField($value, $rules)
     {
         if (is_array($value) && isset($rules['fields'])) {
             return self::sanitize($value, $rules['fields']);
@@ -61,7 +62,7 @@ class Sanitization
                 $value = self::sanitizePattern($value, $rules['pattern']);
             }
         }
-        
+
         if (isset($rules['values'])) {
             $value = self::sanitizeValues($value, $rules['values']);
         }
@@ -82,42 +83,6 @@ class Sanitization
     }
 
     /**
-     * @param string|int $value
-     * @return int
-     */
-    protected static function sanitizeInteger($value)
-    {
-        return (int) filter_var(intval($value), FILTER_SANITIZE_NUMBER_INT);
-    }
-
-    /**
-     * @param string $value
-     * @return string
-     */
-    protected static function sanitizeString($value)
-    {
-        return (string) filter_var(strval($value), FILTER_SANITIZE_STRING);
-    }
-
-    /**
-     * @param string|float $value
-     * @return float
-     */
-    protected static function sanitizeDecimal($value)
-    {
-        return (float) filter_var(floatval($value), FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
-    }
-
-    /**
-     * @param string|bool $value
-     * @return true|false|null
-     */
-    protected static function sanitizeBoolean($value)
-    {
-        return filter_var($value, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE);
-    }
-    
-    /**
      * @param string $value
      * @return string
      */
@@ -125,16 +90,17 @@ class Sanitization
     {
         $pattern = '(?:[1-9]\d{3}-(?:(?:0[1-9]|1[0-2])-(?:0[1-9]|1\d|2[0-8])|(?:0[13-9]|1[0-2])-(?:29|30)|(?:0[13578]|1[02])-31)|(?:[1-9]\d(?:0[48]|[2468][048]|[13579][26])|(?:[2468][048]|[13579][26])00)-02-29)T(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:Z|[+-][01]\d:[0-5]\d)';
         $value = trim($value);
-         
+
         if (preg_match('/^' . $pattern . '$/', $value)
             || preg_match('/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}[+-]\d{2}:\d{2}$/', $value)
-            || preg_match('/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$/', $value)) {
+            || preg_match('/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$/', $value)
+        ) {
             return $value;
         }
 
         return preg_replace('/[^0-9TZ\:\-\+]/', '', $value);
     }
-    
+
     /**
      * @param string $value
      * @param string $pattern
@@ -145,10 +111,10 @@ class Sanitization
         if (preg_match('/^' . $pattern . '$/', $value)) {
             return $value;
         }
-        
+
         return preg_replace('/[^' . $pattern . ']/', '', $value);
     }
-    
+
     /**
      * @param string $value
      * @param array|string $array
@@ -165,7 +131,43 @@ class Sanitization
         } elseif (strcasecmp($value, $array) === 0) {
             return $array;
         }
-        
+
         return $value;
+    }
+
+    /**
+     * @param string|int $value
+     * @return int
+     */
+    protected static function sanitizeInteger($value)
+    {
+        return (int)filter_var(intval($value), FILTER_SANITIZE_NUMBER_INT);
+    }
+
+    /**
+     * @param string $value
+     * @return string
+     */
+    protected static function sanitizeString($value)
+    {
+        return (string)filter_var(strval($value), FILTER_SANITIZE_STRING);
+    }
+
+    /**
+     * @param string|float $value
+     * @return float
+     */
+    protected static function sanitizeDecimal($value)
+    {
+        return (float)filter_var(floatval($value), FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
+    }
+
+    /**
+     * @param string|bool $value
+     * @return true|false|null
+     */
+    protected static function sanitizeBoolean($value)
+    {
+        return filter_var($value, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE);
     }
 }
