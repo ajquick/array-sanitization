@@ -107,7 +107,7 @@ class SanitizationTest extends TestCase
             ]
         ];
         $array = [
-            'a' => '<a href="www.website.com">Hello</a>',
+            'a' => '<a href="http://www.google.com">Hello</a>',
             'b' => "This isn't really a good test.",
             'c' => "The string filter doesn't really do that <i>much</i>.",
             'd' => 'Okay. Maybe it does a little?'
