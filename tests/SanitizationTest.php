@@ -1,21 +1,22 @@
 <?php
-/**    __  ___      ____  _     ___                           _                    __
- *    /  |/  /_  __/ / /_(_)___/ (_)___ ___  ___  ____  _____(_)___  ____   ____ _/ /
- *   / /|_/ / / / / / __/ / __  / / __ `__ \/ _ \/ __ \/ ___/ / __ \/ __ \ / __ `/ / 
- *  / /  / / /_/ / / /_/ / /_/ / / / / / / /  __/ / / (__  ) / /_/ / / / // /_/ / /  
- * /_/  /_/\__,_/_/\__/_/\__,_/_/_/ /_/ /_/\___/_/ /_/____/_/\____/_/ /_(_)__,_/_/   
- *                                                                                  
- * CONFIDENTIAL
+/**
+ *      __  ___      ____  _     ___                           _                    __
+ *     /  |/  /_  __/ / /_(_)___/ (_)___ ___  ___  ____  _____(_)___  ____   ____ _/ /
+ *    / /|_/ / / / / / __/ / __  / / __ `__ \/ _ \/ __ \/ ___/ / __ \/ __ \ / __ `/ /
+ *   / /  / / /_/ / / /_/ / /_/ / / / / / / /  __/ / / (__  ) / /_/ / / / // /_/ / /
+ *  /_/  /_/\__,_/_/\__/_/\__,_/_/_/ /_/ /_/\___/_/ /_/____/_/\____/_/ /_(_)__,_/_/
  *
- * © 2017 Multidimension.al - All Rights Reserved
- * 
- * NOTICE:  All information contained herein is, and remains the property of
- * Multidimension.al and its suppliers, if any.  The intellectual and
- * technical concepts contained herein are proprietary to Multidimension.al
- * and its suppliers and may be covered by U.S. and Foreign Patents, patents in
- * process, and are protected by trade secret or copyright law. Dissemination
- * of this information or reproduction of this material is strictly forbidden
- * unless prior written permission is obtained.
+ *  @author Multidimension.al
+ *  @copyright Copyright © 2016-2017 Multidimension.al - All Rights Reserved
+ *  @license Proprietary and Confidential
+ *
+ *  NOTICE:  All information contained herein is, and remains the property of
+ *  Multidimension.al and its suppliers, if any.  The intellectual and
+ *  technical concepts contained herein are proprietary to Multidimension.al
+ *  and its suppliers and may be covered by U.S. and Foreign Patents, patents in
+ *  process, and are protected by trade secret or copyright law. Dissemination
+ *  of this information or reproduction of this material is strictly forbidden
+ *  unless prior written permission is obtained.
  */
 
 namespace Multidimensional\ArraySanitization\Test;
@@ -106,7 +107,7 @@ class SanitizationTest extends TestCase
             ]
         ];
         $array = [
-            'a' => '<a href="www.website.com>Hello</a>',
+            'a' => '<a href="www.website.com">Hello</a>',
             'b' => "This isn't really a good test.",
             'c' => "The string filter doesn't really do that <i>much</i>.",
             'd' => 'Okay. Maybe it does a little?'
@@ -197,16 +198,21 @@ class SanitizationTest extends TestCase
             ],
             'b' => [
                 'pattern' => 'ISO 8601'
-            ]
+            ],
+            'c' => [
+                'pattern' => '\d{5}'
+            ],
         ];
         $array = [
             'a' => 'abc12345def',
-            'b' => '2005-08-15T15:52:01+00:00ABC'
+            'b' => '2005-08-15T15:52:01+00:00ABC',
+            'c' => '12345'
         ];
         $result = Sanitization::sanitize($array, $rules);
         $expected = [
             'a' => '12345',
-            'b' => '2005-08-15T15:52:01+00:00'
+            'b' => '2005-08-15T15:52:01+00:00',
+            'c' => '12345'
         ];
         $this->assertEquals($expected, $result);
     }
@@ -271,6 +277,28 @@ class SanitizationTest extends TestCase
             'a' => 101,
             'b' => 'hello',
             'c' => 'goodbye'
+        ];
+        $this->assertEquals($expected, $result);
+    }
+
+    public function testValuesFailure()
+    {
+        $rules = [
+            'a' => [
+                'type' => 'integer',
+                'values' => [
+                    100,
+                    101,
+                    102
+                ]
+            ]
+        ];
+        $array = [
+            'a' => '103',
+        ];
+        $result = Sanitization::sanitize($array, $rules);
+        $expected = [
+            'a' => 103,
         ];
         $this->assertEquals($expected, $result);
     }
