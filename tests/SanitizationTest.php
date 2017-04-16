@@ -136,7 +136,7 @@ class SanitizationTest extends TestCase
                     ]
                 ]
             ]
-        ];    
+        ];
         $array = [
             'a' => 10.1,
             'b' => [
@@ -171,7 +171,7 @@ class SanitizationTest extends TestCase
             'e' => [
                 'type' => 'boolean'
             ]
-        ];        
+        ];
         $array = [
             'a' => true,
             'b' => 'true',
