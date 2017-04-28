@@ -152,6 +152,51 @@ class SanitizationTest extends TestCase
         ];
         $this->assertEquals($expected, $result);
     }
+
+    public function testMultidimensionalGroupArray()
+    {
+        $rules = [
+            'Population' => [
+                'type' => 'array',
+                'fields' => [
+                    'People' => [
+                        'type' => 'group',
+                        'fields' => [
+                            'Name' => [
+                                'type' => 'string'
+                            ]
+                        ]
+                    ]
+                ]
+            ]
+        ];
+        $array = [
+            'Population' => [
+                'People' => [
+                    0 => [
+                        'Name' => 'John Smith'
+                    ],
+                    1 => [
+                        'Name' => 'Jane Smith'
+                    ]
+                ]
+            ]
+        ];
+        $result = Sanitization::sanitize($array, $rules);
+        $expected = [
+            'Population' => [
+                'People' => [
+                    0 => [
+                        'Name' => 'John Smith'
+                    ],
+                    1 => [
+                        'Name' => 'Jane Smith'
+                    ]
+                ]
+            ]
+        ];
+        $this->assertEquals($expected, $result);
+    }
     
     public function testBoolean()
     {

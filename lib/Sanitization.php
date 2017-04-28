@@ -51,7 +51,17 @@ class Sanitization
      */
     public static function sanitizeField($value, $rules)
     {
-        if (is_array($value) && isset($rules['fields'])) {
+
+        if (is_array($value) && is_array($rules) && isset($rules['fields']) && isset($rules['type']) && strtoupper($rules['type']) === 'GROUP') {
+            foreach ($value as $groupKey => $groupValue) {
+                if (is_array($groupValue)) {
+                    $value[$groupKey] = self::sanitize($groupValue, $rules['fields']);
+                } else {
+                    $value[$groupKey] = self::sanitizeField($groupValue, $rules['fields']);
+                }
+            }
+            return $value;
+        } elseif (is_array($value) && is_array($rules) && isset($rules['fields'])) {
             return self::sanitize($value, $rules['fields']);
         }
 
