@@ -34,7 +34,7 @@ class Sanitization
         $newArray = [];
         if (is_array($array)) {
             foreach ($array as $key => $value) {
-                if (is_array($value) && isset($rules[$key]['type']) && $rules[$key]['type'] == 'array' && isset($rules[$key]['fields'])) {
+                if (is_array($value) && isset($rules[$key]['type']) && strtolower($rules[$key]['type']) == 'array' && isset($rules[$key]['fields'])) {
                     $newArray[$key] = self::sanitize($value, $rules[$key]['fields']);
                 } elseif (in_array($key, array_keys($rules))) {
                     $newArray[$key] = self::sanitizeField($value, $rules[$key]);
@@ -53,7 +53,7 @@ class Sanitization
      */
     public static function sanitizeField($value, $rules)
     {
-        if (is_array($value) && isset($rules['type']) && $rules['type'] == 'group' && isset($rules['fields'])) {
+        if (is_array($value) && isset($rules['type']) && strtolower($rules['type']) == 'group' && isset($rules['fields'])) {
             foreach ($value as $k => $v) {
                 if (is_array($v) && !isset($rules['fields'][$k])) {
                     $value[$k] = self::sanitize($v, $rules['fields']);
