@@ -34,7 +34,9 @@ class Sanitization
         $newArray = [];
         if (is_array($array)) {
             foreach ($array as $key => $value) {
-                if (in_array($key, array_keys($rules))) {
+                if (is_array($value) && isset($rules[$key]['type']) && $rules[$key]['type'] == 'array' && isset($rules[$key]['fields'])) {
+                    $newArray[$key] = self::sanitize($value, $rules[$key]['fields']);
+                } elseif (in_array($key, array_keys($rules))) {
                     $newArray[$key] = self::sanitizeField($value, $rules[$key]);
                 }
             }
@@ -51,41 +53,37 @@ class Sanitization
      */
     public static function sanitizeField($value, $rules)
     {
-
-        if (is_array($value) && is_array($rules) && isset($rules['fields']) && isset($rules['type']) && strtoupper($rules['type']) === 'GROUP') {
-            foreach ($value as $groupKey => $groupValue) {
-                if (is_array($groupValue)) {
-                    $value[$groupKey] = self::sanitize($groupValue, $rules['fields']);
-                } else {
-                    $value[$groupKey] = self::sanitizeField($groupValue, $rules['fields']);
+        if (is_array($value) && isset($rules['type']) && $rules['type'] == 'group' && isset($rules['fields'])) {
+            foreach ($value as $k => $v) {
+                if (is_array($v) && !isset($rules['fields'][$k])) {
+                    $value[$k] = self::sanitize($v, $rules['fields']);
+                } elseif (isset($rules['fields'][$k])) {
+                    $value[$k] = self::sanitizeField($v, $rules['fields'][$k]);
                 }
             }
-            return $value;
-        } elseif (is_array($value) && is_array($rules) && isset($rules['fields'])) {
-            return self::sanitize($value, $rules['fields']);
-        }
-
-        if (isset($rules['pattern'])) {
-            if ($rules['pattern'] == 'ISO 8601') {
-                $value = self::sanitizeISO8601($value);
-            } else {
-                $value = self::sanitizePattern($value, $rules['pattern']);
+        } else {
+            if (isset($rules['pattern'])) {
+                if ($rules['pattern'] == 'ISO 8601') {
+                    $value = self::sanitizeISO8601($value);
+                } else {
+                    $value = self::sanitizePattern($value, $rules['pattern']);
+                }
             }
-        }
 
-        if (isset($rules['values'])) {
-            $value = self::sanitizeValues($value, $rules['values']);
-        }
+            if (isset($rules['values'])) {
+                $value = self::sanitizeValues($value, $rules['values']);
+            }
 
-        if (isset($rules['type'])) {
-            if ($rules['type'] == 'integer') {
-                $value = self::sanitizeInteger($value);
-            } elseif ($rules['type'] == 'string') {
-                $value = self::sanitizeString($value);
-            } elseif ($rules['type'] == 'decimal') {
-                $value = self::sanitizeDecimal($value);
-            } elseif ($rules['type'] == 'boolean') {
-                $value = self::sanitizeBoolean($value);
+            if (isset($rules['type'])) {
+                if ($rules['type'] == 'integer') {
+                    $value = self::sanitizeInteger($value);
+                } elseif ($rules['type'] == 'string') {
+                    $value = self::sanitizeString($value);
+                } elseif ($rules['type'] == 'decimal') {
+                    $value = self::sanitizeDecimal($value);
+                } elseif ($rules['type'] == 'boolean') {
+                    $value = self::sanitizeBoolean($value);
+                }
             }
         }
 
