@@ -64,6 +64,11 @@ print_r ($result);
 
 Specific ruleset examples can be found in the ```SanitizationTest.php``` file. For more advanced rulesets, view the [README.md](https://github.com/multidimension-al/array-validation/blob/master/README.md) from our [Array Validation](https://github.com/multidimension-al/array-validation) library. 
 
+# Contributing
+
+We appreciate all help in improving this library by either adding functions or improving existing functionality. If you do want to add to our library, please ensure you use PSR-2 formatting and add unit testing for all added functions.
+
+Feel free to fork and submit a pull request!
 
 # License
 
