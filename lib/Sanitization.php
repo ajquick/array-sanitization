@@ -63,8 +63,16 @@ class Sanitization
             }
         } else {
             if (isset($rules['pattern'])) {
-                if ($rules['pattern'] == 'ISO 8601') {
+                if (strtoupper($rules['pattern']) == 'ISO 8601' || strtoupper($rules['pattern']) == 'ISO8601') {
                     $value = self::sanitizeISO8601($value);
+                } else if (strtoupper($rules['pattern']) == 'URL') {
+                    $value = self::sanitizeURL($value);
+                } else if (strtoupper($rules['pattern']) == 'EMAIL') {
+                    $value = self::sanitizeEmail($value);
+                } else if (strtoupper($rules['pattern']) == 'IP') {
+                    $value = self::sanitizeIP($value);
+                } else if (strtoupper($rules['pattern']) == 'MAC') {
+                    $value = self::sanitizeMAC($value);
                 } else {
                     $value = self::sanitizePattern($value, $rules['pattern']);
                 }
@@ -177,5 +185,51 @@ class Sanitization
     protected static function sanitizeBoolean($value)
     {
         return filter_var($value, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE);
+    }
+
+    /**
+     * @param string $value
+     * @return string
+     */
+    protected static function sanitizeURL($value)
+    {
+        return (string)filter_var(strval($value), FILTER_SANITIZE_URL);
+    }
+
+    /**
+     * @param string $value
+     * @return string
+     */
+    protected static function sanitizeEmail($value)
+    {
+        return (string)filter_var(strval($value), FILTER_SANITIZE_EMAIL);
+    }
+
+    /**
+     * @param string $value
+     * @return string
+     */
+    protected static function sanitizeMAC($value)
+    {
+        if(filter_var($value, FILTER_VALIDATE_MAC)) {
+            return (string)$value;
+        }
+
+        return (string)preg_replace('/[\x00-\x2C\x3B-\x40\x47-\x60\x67-\xFF]/', '', $value);
+
+    }
+
+    /**
+     * @param string $value
+     * @return string
+     */
+    protected static function sanitizeIP($value)
+    {
+        if(filter_var($value, FILTER_VALIDATE_IP)) {
+            return (string)$value;
+        }
+
+        return (string)preg_replace('/[\x00-\x2D\x2F\x3B-\x40\x47-\x60\x67-\xFF]/', '', $value);
+
     }
 }
